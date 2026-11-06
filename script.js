@@ -11,12 +11,14 @@
 */
 const CATALOG = {
   programs: [],
+  vst: [],
   samples: [],
   ui: [],
 };
 
 const EMPTY_TEXT = {
   programs: "Open source programs are on their way~",
+  vst: "VST plugins are on their way~",
   samples: "Sample packs are being cooked up~",
   ui: "UI packs are coming soon~",
 };

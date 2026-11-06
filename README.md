@@ -1,6 +1,6 @@
 # Kiru's Creative Studio
 
-The website for Kiru's Creative Studio: open source programs, sample packs and UI packs.
+The website for Kiru's Creative Studio: open source programs, VST plugins, sample packs and UI packs.
 
 Plain HTML, CSS and JavaScript, no build step.
 
@@ -11,9 +11,10 @@ python3 -m http.server 8000
 # then open http://localhost:8000
 ```
 
-## Adding programs, sample packs or UI packs
+## Adding programs, VST plugins, sample packs or UI packs
 
-Open `script.js` and add entries to the `CATALOG` object at the top:
+Open `script.js` and add entries to the `CATALOG` object at the top
+(categories: `programs`, `vst`, `samples`, `ui`):
 
 ```js
 programs: [

@@ -23,7 +23,7 @@ programs: [
     description: "One short sentence about it.",
     tags: ["free", "v1.0"],
     link: "https://github.com/KiruTheProot-Creative/...",
-    linkLabel: "Get it"
+    linkLabel: "View on GitHub"  // optional, swaps the DOWNLOAD image for a text button
   }
 ],
 ```

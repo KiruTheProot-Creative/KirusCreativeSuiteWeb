@@ -5,8 +5,8 @@
     title: "My Cool Thing",
     description: "One short sentence about it.",
     tags: ["free", "v1.0"],          // optional
-    link: "https://github.com/...",  // where the button goes
-    linkLabel: "Get it"              // optional, defaults to "View"
+    link: "https://github.com/...",  // where the DOWNLOAD button goes
+    linkLabel: "View on GitHub"      // optional: replaces the DOWNLOAD image with a text button
   }
 */
 const CATALOG = {
@@ -40,15 +40,19 @@ function renderCard(item) {
     card.append(el("div", { class: "tags" }, item.tags.map((t) => el("span", { text: t }))));
   }
   if (item.link) {
-    card.append(
-      el("a", {
-        class: "btn",
-        href: item.link,
-        target: "_blank",
-        rel: "noopener",
-        text: item.linkLabel || "View",
-      })
-    );
+    if (item.linkLabel) {
+      // custom label -> plain text button
+      card.append(
+        el("a", { class: "btn", href: item.link, target: "_blank", rel: "noopener", text: item.linkLabel })
+      );
+    } else {
+      // default -> the DOWNLOAD image button
+      card.append(
+        el("a", { class: "dl", href: item.link, target: "_blank", rel: "noopener", "aria-label": "Download " + item.title }, [
+          el("img", { src: "assets/btn-download.png", alt: "Download", width: "800", height: "116" }),
+        ])
+      );
+    }
   }
   return card;
 }

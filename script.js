@@ -33,28 +33,27 @@ function el(tag, props = {}, children = []) {
   return node;
 }
 
+// one catalog item = one Win98 group box
 function renderCard(item) {
-  const card = el("article", { class: "card" }, [el("h3", { text: item.title })]);
-  if (item.description) card.append(el("p", { text: item.description }));
+  const box = el("fieldset", {}, [el("legend", { text: item.title })]);
+  if (item.description) box.append(el("p", { text: item.description }));
   if (item.tags && item.tags.length) {
-    card.append(el("div", { class: "tags" }, item.tags.map((t) => el("span", { text: t }))));
+    box.append(el("div", { class: "tags" }, item.tags.map((t) => el("span", { text: t }))));
   }
   if (item.link) {
     if (item.linkLabel) {
-      // custom label -> plain text button
-      card.append(
-        el("a", { class: "btn", href: item.link, target: "_blank", rel: "noopener", text: item.linkLabel })
+      box.append(
+        el("a", { class: "button98", href: item.link, target: "_blank", rel: "noopener", text: item.linkLabel })
       );
     } else {
-      // default -> the DOWNLOAD image button
-      card.append(
+      box.append(
         el("a", { class: "dl", href: item.link, target: "_blank", rel: "noopener", "aria-label": "Download " + item.title }, [
           el("img", { src: "assets/btn-download.png", alt: "Download", width: "800", height: "116" }),
         ])
       );
     }
   }
-  return card;
+  return box;
 }
 
 function renderCatalog() {
@@ -63,28 +62,95 @@ function renderCatalog() {
     const items = CATALOG[key] || [];
     if (!items.length) {
       grid.append(
-        el("div", { class: "empty" }, [
-          el("strong", { text: "Nothing here yet" }),
-          el("span", { text: EMPTY_TEXT[key] || "Coming soon~" }),
+        el("p", { class: "empty" }, [
+          el("b", { text: "This folder is empty." }),
+          document.createTextNode(EMPTY_TEXT[key] || "Coming soon~"),
         ])
       );
-      return;
+    } else {
+      items.forEach((item) => grid.append(renderCard(item)));
     }
-    items.forEach((item) => grid.append(renderCard(item)));
+    const counter = document.querySelector('[data-count-for="' + key + '"]');
+    if (counter) counter.textContent = items.length + " object(s)";
   });
 }
 
-// highlight the nav link of the section you're looking at
-function setupNavHighlight() {
-  const links = [...document.querySelectorAll(".topbar nav a")];
-  const byId = new Map(links.map((a) => [a.getAttribute("href").slice(1), a]));
+// minimize button collapses/expands its window
+function setCollapsed(win, collapsed) {
+  win.classList.toggle("collapsed", collapsed);
+  const btn = win.querySelector('.title-bar-controls button[aria-label="Minimize"]');
+  if (btn) btn.setAttribute("aria-expanded", String(!collapsed));
+}
+
+function setupWindows() {
+  document.querySelectorAll(".win").forEach((win) => {
+    const btn = win.querySelector('.title-bar-controls button[aria-label="Minimize"]');
+    if (btn) btn.addEventListener("click", () => setCollapsed(win, !win.classList.contains("collapsed")));
+  });
+
+  // jumping to a minimized window (from the taskbar, Start menu or a button) restores it
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const target = document.getElementById(link.getAttribute("href").slice(1));
+    if (target && target.classList.contains("win")) setCollapsed(target, false);
+  });
+}
+
+// Start menu
+function setupStartMenu() {
+  const button = document.getElementById("start-btn");
+  const menu = document.getElementById("start-menu");
+
+  function setOpen(open) {
+    menu.hidden = !open;
+    button.setAttribute("aria-expanded", String(open));
+  }
+
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setOpen(menu.hidden);
+    if (!menu.hidden) menu.querySelector("a").focus();
+  });
+  menu.addEventListener("click", (event) => {
+    if (event.target.closest("a")) setOpen(false);
+  });
+  document.addEventListener("click", (event) => {
+    if (!menu.hidden && !menu.contains(event.target)) setOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !menu.hidden) {
+      setOpen(false);
+      button.focus();
+    }
+  });
+}
+
+// taskbar clock
+function setupClock() {
+  const clock = document.getElementById("clock");
+  const tick = () => {
+    clock.textContent = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  };
+  tick();
+  setInterval(tick, 15000);
+}
+
+// press the taskbar button of the window you're looking at
+function setupTaskbarHighlight() {
+  const tasks = [...document.querySelectorAll(".task")];
+  const byId = new Map(tasks.map((a) => [a.getAttribute("href").slice(1), a]));
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        const link = byId.get(entry.target.id);
-        if (link && entry.isIntersecting) {
-          links.forEach((a) => a.classList.remove("active"));
-          link.classList.add("active");
+        const task = byId.get(entry.target.id);
+        if (task && entry.isIntersecting) {
+          tasks.forEach((a) => {
+            a.classList.remove("active");
+            a.removeAttribute("aria-current");
+          });
+          task.classList.add("active");
+          task.setAttribute("aria-current", "true");
         }
       });
     },
@@ -98,4 +164,7 @@ function setupNavHighlight() {
 
 document.getElementById("year").textContent = new Date().getFullYear();
 renderCatalog();
-setupNavHighlight();
+setupWindows();
+setupStartMenu();
+setupClock();
+setupTaskbarHighlight();

@@ -5,8 +5,8 @@
     title: "My Cool Thing",
     description: "One short sentence about it.",
     tags: ["free", "v1.0"],          // optional
-    link: "https://github.com/...",  // where the DOWNLOAD button goes
-    linkLabel: "View on GitHub",     // optional: replaces the DOWNLOAD image with a text button
+    link: "https://github.com/...",  // where the Download button goes
+    linkLabel: "View on GitHub",     // optional: changes the button text (default is "Download")
 
     // all of these are optional:
     featured: true,                  // makes the card span the full width
@@ -91,17 +91,10 @@ function renderCard(item) {
 
   const actions = el("div", { class: "actions" });
   if (item.link) {
-    if (item.linkLabel) {
-      actions.append(
-        el("a", { class: "button98", href: item.link, target: "_blank", rel: "noopener", text: item.linkLabel })
-      );
-    } else {
-      actions.append(
-        el("a", { class: "dl", href: item.link, target: "_blank", rel: "noopener", "aria-label": "Download " + item.title }, [
-          el("img", { src: "assets/btn-download.png", alt: "Download", width: "800", height: "116" }),
-        ])
-      );
-    }
+    const props = { class: "button98", href: item.link, target: "_blank", rel: "noopener", text: item.linkLabel || "Download" };
+    // screen readers get the full name when the button just says "Download"
+    if (!item.linkLabel) props["aria-label"] = "Download " + item.title;
+    actions.append(el("a", props));
   }
   (item.extraLinks || []).forEach((l) =>
     actions.append(el("a", { class: "button98", href: l.href, target: "_blank", rel: "noopener", text: l.label }))

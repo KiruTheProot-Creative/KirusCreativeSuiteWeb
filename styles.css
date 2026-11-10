@@ -59,7 +59,7 @@ main {
 .win.collapsed { box-shadow: var(--border-window-outer), var(--border-window-inner), 6px 6px 0 rgba(0, 0, 0, .55); }
 
 /* 98.css has no link-style button, so <a> gets the same bevel as <button> */
-.button98, .dl {
+.button98 {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 75px; min-height: 23px; padding: 0 14px;
   background: var(--surface); color: #000; text-decoration: none;
@@ -69,8 +69,8 @@ main {
   box-shadow: var(--border-raised-outer), var(--border-raised-inner);
   cursor: default;
 }
-.button98:active, .dl:active { box-shadow: var(--border-sunken-outer), var(--border-sunken-inner); padding: 1px 13px 0 15px; }
-.button98:focus-visible, .dl:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }
+.button98:active { box-shadow: var(--border-sunken-outer), var(--border-sunken-inner); padding: 1px 13px 0 15px; }
+.button98:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }
 
 /* ---------- title images sit in a white sunken panel ---------- */
 .sunken-panel.title-panel {
@@ -122,9 +122,6 @@ main {
 .includes { margin: 0; padding-left: 18px; }
 .includes li { margin: 3px 0; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.dl { align-self: flex-start; padding: 3px; }
-.dl img { display: block; width: 168px; height: auto; }
-.dl:active { padding: 4px 2px 2px 4px; }
 
 .empty {
   grid-column: 1 / -1; margin: 0; padding: 22px 12px; text-align: center;
@@ -211,7 +208,6 @@ main {
   .tasks { display: none; }
   .tray { margin-left: auto; }
   .about-body { flex-direction: column; align-items: center; text-align: center; }
-  .dl img { width: 150px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -117,7 +117,11 @@ main {
   padding: 0 6px; background: #fff; font-size: 11px;
   box-shadow: var(--border-sunken-outer), var(--border-sunken-inner);
 }
-.grid .button98 { align-self: flex-start; }
+.grid fieldset.featured { grid-column: 1 / -1; }
+.grid fieldset p.note { flex: none; padding: 6px 8px; background: #fff; box-shadow: var(--border-sunken-outer), var(--border-sunken-inner); }
+.includes { margin: 0; padding-left: 18px; }
+.includes li { margin: 3px 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .dl { align-self: flex-start; padding: 3px; }
 .dl img { display: block; width: 168px; height: auto; }
 .dl:active { padding: 4px 2px 2px 4px; }

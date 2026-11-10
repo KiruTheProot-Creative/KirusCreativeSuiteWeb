@@ -30,6 +30,14 @@ programs: [
 ],
 ```
 
+Optional extras per entry: `featured: true` (full-width card), `includes: [{ name, text }]`
+(a "what's inside" list), `note: "..."` (a disclaimer box) and
+`extraLinks: [{ label, href }]` (more buttons). The Kiru Creative Audio Suite entry in the
+`vst` list uses all of them.
+
+The download link points at a specific release build. When you publish a new build,
+update the `link` in `script.js` (or point it at the repo's releases page).
+
 Each entry shows up as a group box inside its folder window. Empty folders show
 "This folder is empty." and the status bar counts the objects.
 

@@ -6,12 +6,45 @@
     description: "One short sentence about it.",
     tags: ["free", "v1.0"],          // optional
     link: "https://github.com/...",  // where the DOWNLOAD button goes
-    linkLabel: "View on GitHub"      // optional: replaces the DOWNLOAD image with a text button
+    linkLabel: "View on GitHub",     // optional: replaces the DOWNLOAD image with a text button
+
+    // all of these are optional:
+    featured: true,                  // makes the card span the full width
+    includes: [                      // a "what's inside" list
+      { name: "Thing", text: "What it does." }
+    ],
+    note: "A disclaimer shown in a box on the card.",
+    extraLinks: [                    // more text buttons next to the main one
+      { label: "GitHub", href: "https://github.com/..." }
+    ]
   }
 */
 const CATALOG = {
   programs: [],
-  vst: [],
+  vst: [
+    {
+      title: "Kiru Creative Audio Suite",
+      featured: true,
+      description: "One installer for the whole suite: a sampler, a sample-instrument builder and a node-based FX plugin.",
+      tags: ["Windows", "installer"],
+      includes: [
+        {
+          name: "VisuPlayer + Visumaker",
+          text: "The Kontakt alternative that is easier to use and faster to load.",
+        },
+        {
+          name: "NodeFX",
+          text: "An FX plugin where you build your FX out of Node Modules.",
+        },
+      ],
+      note: "This software was coded with AI, but it is human directed and tested.",
+      link: "https://github.com/KiruTheProot-Creative/VisuSampler/releases/download/build-20261110-0211/KiruCAS-Setup.exe",
+      extraLinks: [
+        { label: "GitHub", href: "https://github.com/KiruTheProot-Creative/VisuSampler" },
+        { label: "Discord support", href: "https://discord.gg/hwqa9rxQEb" },
+      ],
+    },
+  ],
   samples: [],
   ui: [],
 };
@@ -35,24 +68,45 @@ function el(tag, props = {}, children = []) {
 
 // one catalog item = one Win98 group box
 function renderCard(item) {
-  const box = el("fieldset", {}, [el("legend", { text: item.title })]);
+  const box = el("fieldset", item.featured ? { class: "featured" } : {}, [el("legend", { text: item.title })]);
   if (item.description) box.append(el("p", { text: item.description }));
+
+  if (item.includes && item.includes.length) {
+    box.append(
+      el(
+        "ul",
+        { class: "includes" },
+        item.includes.map((inc) => el("li", {}, [el("b", { text: inc.name }), document.createTextNode(": " + inc.text)]))
+      )
+    );
+  }
+
   if (item.tags && item.tags.length) {
     box.append(el("div", { class: "tags" }, item.tags.map((t) => el("span", { text: t }))));
   }
+
+  if (item.note) {
+    box.append(el("p", { class: "note" }, [el("b", { text: "Disclaimer: " }), document.createTextNode(item.note)]));
+  }
+
+  const actions = el("div", { class: "actions" });
   if (item.link) {
     if (item.linkLabel) {
-      box.append(
+      actions.append(
         el("a", { class: "button98", href: item.link, target: "_blank", rel: "noopener", text: item.linkLabel })
       );
     } else {
-      box.append(
+      actions.append(
         el("a", { class: "dl", href: item.link, target: "_blank", rel: "noopener", "aria-label": "Download " + item.title }, [
           el("img", { src: "assets/btn-download.png", alt: "Download", width: "800", height: "116" }),
         ])
       );
     }
   }
+  (item.extraLinks || []).forEach((l) =>
+    actions.append(el("a", { class: "button98", href: l.href, target: "_blank", rel: "noopener", text: l.label }))
+  );
+  if (actions.children.length) box.append(actions);
   return box;
 }
 

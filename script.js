@@ -38,7 +38,7 @@ const CATALOG = {
         },
       ],
       note: "This software was coded with AI, but it is human directed and tested.",
-      link: "https://github.com/KiruTheProot-Creative/VisuSampler/releases/download/build-20261110-0211/KiruCAS-Setup.exe",
+      link: "https://github.com/KiruTheProot-Creative/VisuSampler/releases/download/build-20261110-1210/KiruCAS-Setup.exe",
       extraLinks: [
         { label: "GitHub", href: "https://github.com/KiruTheProot-Creative/VisuSampler" },
         { label: "Discord support", href: "https://discord.gg/hwqa9rxQEb" },
